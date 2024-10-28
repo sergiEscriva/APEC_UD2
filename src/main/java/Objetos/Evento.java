@@ -17,6 +17,4 @@ public class Evento {
 	private String numero_piloto;
 	private int equipo_id;
 	private int categoria_id;
-	
-	
 }

@@ -37,8 +37,24 @@ public class EntradaPilotoImpl implements EntradaPilotoDAO {
 
 	@Override
 	public EntradaPiloto obtenerPorId(int entryId, int driverId) throws DAOException {
-		return null;
-	}
+		try (
+				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_POR_ID)) {
+			statement.setInt(1, entryId);
+			statement.setInt(2, driverId);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					return new EntradaPiloto(
+							resultSet.getInt("ENTRY_ID"),
+							resultSet.getInt("DRIVER_ID"),
+							resultSet.getBoolean("ROOKIE"),
+							resultSet.getInt("CATEGORY")
+					);
+				}
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting EntradaPiloto by ID", e);
+		}
+		return null;	}
 
 	@Override
 	public List<EntradaPiloto> obtenerTodas() throws DAOException {
