@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EntradaPiloto {
-	
 	private int entrada_id;
 	private int piloto_id;
 	private boolean rookie;

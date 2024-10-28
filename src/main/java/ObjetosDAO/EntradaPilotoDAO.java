@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface EntradaPilotoDAO {
 	void insertar(EntradaPiloto entradaPiloto) throws DAOException;
-	EntradaPiloto obtenerPorId(int id) throws DAOException;
+	EntradaPiloto obtenerPorId(int entryId, int driverId) throws DAOException;
 	List<EntradaPiloto> obtenerTodas() throws DAOException;
 	void actualizar(EntradaPiloto entradaPiloto) throws DAOException;
-	void eliminar(int id ) throws DAOException;
+	void eliminar(int entryId, int driverId ) throws DAOException;
 }
