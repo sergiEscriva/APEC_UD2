@@ -16,7 +16,7 @@ public class Motor {
 	private String fabricante;
 	private int capacidad;
 	private String arquitectura;
-	private LocalDate anyo_debut;
+	private String anyo_debut;
 	private boolean gasolina;
 	private boolean diesel;
 	private boolean electrico;
