@@ -16,6 +16,7 @@ public class MotorImpl implements MotorDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM ENGINE";
 	private static final String ACTUALIZAR = "UPDATE MOTOR SET NAME=?, MANUFACTER=?, CAPACITY=?, ARCHITECTURE=?, DEBUT_YEAR=?, PETROL_ENGINE=?, DIESEL_ENGINE=?, ELECTRIC_ENGINE=?, TURBO=?, DERIVED_FROM_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM ENGINE WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM ENGINE";	
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
@@ -103,6 +104,19 @@ public class MotorImpl implements MotorDAO {
 		} catch (Exception e) {
 			throw new DAOException("Error deleting motor", e);
 		}
+	}
+
+	@Override
+	public int obtenerUltimoId() throws DAOException {
+		try (PreparedStatement ps = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+			 ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				return rs.getInt("MAX_ID");
+			}
+		} catch (Exception e) {
+			throw new DAOException("Error getting last motor ID", e);
+		}
+		return 0;
 	}
 
 	public static Motor crearMotor(ResultSet rs) {

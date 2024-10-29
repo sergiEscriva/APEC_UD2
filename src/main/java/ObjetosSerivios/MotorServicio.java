@@ -15,8 +15,9 @@ public class MotorServicio {
         this.motorDAO = new MotorImpl();
     }
 
-    public void agregarMotor(String nombre, String fabricante, int capacidad, String arquitectura, String anyoDebut, boolean gasolina, boolean diesel, boolean electrico, boolean turbo, int derivadoDesdeId) {
+    public void agregarMotor(int id, String nombre, String fabricante, int capacidad, String arquitectura, int anyoDebut, boolean gasolina, boolean diesel, boolean electrico, boolean turbo, int derivadoDesdeId) {
         Motor motor = new Motor();
+        motor.setMotor(id);
         motor.setNombre(nombre);
         motor.setFabricante(fabricante);
         motor.setCapacidad(capacidad);
@@ -53,7 +54,7 @@ public class MotorServicio {
         }
     }
 
-    public void actualizarMotor(int id, String nombre, String fabricante, int capacidad, String arquitectura, String anyoDebut, boolean gasolina, boolean diesel, boolean electrico, boolean turbo, int derivadoDesdeId) {
+    public void actualizarMotor(int id, String nombre, String fabricante, int capacidad, String arquitectura, int anyoDebut, boolean gasolina, boolean diesel, boolean electrico, boolean turbo, int derivadoDesdeId) {
         Motor motor = new Motor(id, nombre, fabricante, capacidad, arquitectura, anyoDebut, gasolina, diesel, electrico, turbo, derivadoDesdeId);
         try {
             motorDAO.actualizar(motor);
@@ -71,4 +72,13 @@ public class MotorServicio {
             e.printStackTrace();
         }
     }
+    public int obtenerUltimoId() {
+        try {
+            return motorDAO.obtenerUltimoId();
+        } catch (DAOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
 }

@@ -173,8 +173,52 @@ public class GestionEventos {
 	}
 
 	private static void gestionarMotor() {
-		// Implement CRUD operations for Motor
-		System.out.println("Gestionando Motor");
+		MotorServicio motor = new MotorServicio();
+		int ultimoId = obtenerUltimoIdMotor(motor);
+		List<Motor> motorList;
+		boolean finalizar = Boolean.FALSE;
+		do {
+			imprimirGestion();
+			switch (seleccionGestion()) {
+				case 1 -> {
+					boolean gasolina = obtenerGasolina();
+					boolean diesel = obtenerDiesel();
+					if (gasolina && diesel) {
+						System.out.println("Un motor no puede ser gasolina y diesel a la vez.");
+					} else {
+						motor.agregarMotor(obtenerID(ultimoId), obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut() ,gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
+					}
+				}
+				case 2 -> {
+					boolean gasolina = obtenerGasolina();
+					boolean diesel = obtenerDiesel();
+					if (gasolina && diesel) {
+						System.out.println("Un motor no puede ser gasolina y diesel a la vez.");
+					} else {
+						motor.actualizarMotor(obtenerID(),  obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut() ,gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
+					}
+				}
+				case 3 -> motor.eliminarMotor(obtenerID());
+				case 4 -> {
+					Motor motorEncontrado = motor.obtenerMotor(obtenerID());
+					if (motorEncontrado != null) {
+						System.out.println(motorEncontrado);
+					} else {
+						System.out.println("Motor no encontrado");
+					}
+				}
+				case 5 -> {
+					motorList = motor.listarMotores();
+					motorList.forEach(System.out::println);
+				}
+				default -> finalizar = Boolean.TRUE;
+			}
+		} while (!finalizar);
+		
+	}
+	
+	private static int obtenerUltimoIdMotor(MotorServicio motorServicio){
+		return motorServicio.obtenerUltimoId();
 	}
 
 	private static void gestionarPiloto() {
@@ -430,6 +474,50 @@ public class GestionEventos {
 	private static String obtenerColorFondo() {
 		System.out.println("Introduzca el color de fondo: ");
 		return sc.nextLine();
+	}
+	private static int obtenerCapacidad(){
+		System.out.println("Introduzca la capacidad: ");
+		int resultado = 0;
+		boolean correcto = Boolean.FALSE;
+		do {
+			try {
+				resultado = sc.nextInt();
+				if (resultado > 0) {
+					correcto = Boolean.TRUE;
+				} else {
+					System.out.println("Se debe introduzir un numero mayor que 0");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduze un numero valido");
+				sc.next();
+			}
+		} while (!correcto);
+
+		return resultado;
+	}
+	private static String obtenerArquitectura(){
+		System.out.println("Introduzca la arquitectura: ");
+		return sc.nextLine();
+	}
+
+	private static boolean obtenerGasolina() {
+		System.out.println("¿Es gasolina? (true/false): ");
+		return sc.nextBoolean();
+	}
+
+	private static boolean obtenerDiesel() {
+		System.out.println("¿Es diesel? (true/false): ");
+		return sc.nextBoolean();
+	}
+
+	private static boolean obtenerElectrico() {
+		System.out.println("¿Es eléctrico? (true/false): ");
+		return sc.nextBoolean();
+	}
+
+	private static boolean obtenerTurbo() {
+		System.out.println("¿Tiene turbo? (true/false): ");
+		return sc.nextBoolean();
 	}
 
 

@@ -11,4 +11,5 @@ public interface MotorDAO {
 	List<Motor> obtenerTodas() throws DAOException;
 	void actualizar(Motor motor) throws DAOException;
 	void eliminar(int id ) throws DAOException;
+	int obtenerUltimoId() throws DAOException;
 }
