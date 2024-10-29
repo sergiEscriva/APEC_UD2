@@ -15,8 +15,9 @@ public class ChassisServicio {
         this.chassisDAO = new ChassisImpl();
     }
 
-    public void agregarChassis(String nombre, String fabricante, int anyoDebut, int derivadoDesdeId) {
+    public void agregarChassis(int id, String nombre, String fabricante, int anyoDebut, int derivadoDesdeId) {
         Chassis chassis = new Chassis();
+        chassis.setId(id);
         chassis.setNombre(nombre);
         chassis.setFabricante(fabricante);
         chassis.setAnyo_debut(anyoDebut);
@@ -64,5 +65,9 @@ public class ChassisServicio {
         } catch (DAOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public int obtenerUltimoId() throws DAOException {
+        return chassisDAO.obtenerUltimoID();
     }
 }

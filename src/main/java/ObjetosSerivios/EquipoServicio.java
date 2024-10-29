@@ -15,8 +15,9 @@ public class EquipoServicio {
         this.equipoDAO = new EquipoImpl();
     }
 
-    public void agregarEquipo(String nombre, String descripcion) {
+    public void agregarEquipo(int id, String nombre, String descripcion) {
         Equipo equipo = new Equipo();
+        equipo.setId(id);
         equipo.setNombre(nombre);
         equipo.setDescripcion(descripcion);
         try {
@@ -62,5 +63,9 @@ public class EquipoServicio {
         } catch (DAOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public int obtenerUltimoId() throws DAOException {
+        return equipoDAO.obtenerUltimoID();
     }
 }

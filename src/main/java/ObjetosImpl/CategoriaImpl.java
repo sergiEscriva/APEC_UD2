@@ -17,8 +17,22 @@ public class CategoriaImpl implements CategoriaDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM CATEGORY";
 	private static final String ACTUALIZAR = "UPDATE CATEGORY SET NAME=?, SHORTNAME=?, RELEVANCE=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM CATEGORY WHERE ID =?";
-	ConexionMs conexion = new ConexionMs();
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM CATEGORY";
 
+	ConexionMs conexion = new ConexionMs();
+	@Override
+	public int obtenerUltimoID() throws DAOException{
+		try (
+				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+				ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error obteniendo el último ID de Categoria", e);
+		}
+		return 0;
+	}
 	@Override
 	public void insertar(Categoria categoria) throws DAOException {
 		try (PreparedStatement statement = conexion.getConnection().prepareStatement(INSERTAR)) {

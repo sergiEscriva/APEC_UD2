@@ -11,4 +11,5 @@ public interface EquipoDAO {
 	List<Equipo> obtenerTodas() throws DAOException;
 	void actualizar(Equipo equipo) throws DAOException;
 	void eliminar(int id ) throws DAOException;
+	int obtenerUltimoID() throws DAOException;
 }

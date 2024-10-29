@@ -11,4 +11,5 @@ public interface ChassisDAO {
 	List<Chassis> obtenerTodas() throws DAOException;
 	void actualizar(Chassis chassis) throws DAOException;
 	void eliminar(int id ) throws DAOException;
+	int obtenerUltimoID() throws DAOException;
 }

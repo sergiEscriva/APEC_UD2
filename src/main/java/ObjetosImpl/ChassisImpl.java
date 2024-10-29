@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChassisImpl implements ChassisDAO {
-	private static final String INSERTAR = "INSERT INTO CHASSIS(ID, NAME, MANUFACTER, DEBUT_YEAR, DERIVED_FROM_ID) VALUES (?,?,?,?,?)";
+	private static final String INSERTAR = "INSERT INTO CHASSIS(ID, NAME, manufacturer, DEBUT_YEAR, DERIVED_FROM_ID) VALUES (?,?,?,?,?)";
 	private static final String OBTENER_POR_ID = "SELECT * FROM CHASSIS WHERE ID =?";
 	private static final String OBTENER_TODOS = "SELECT * FROM CHASSIS";
-	private static final String ACTUALIZAR = "UPDATE CHASSIS SET NAME=?, MANUFACTER=?, DEBUT_YEAR=?, DERIVED_FROM_ID=? WHERE ID=?";
+	private static final String ACTUALIZAR = "UPDATE CHASSIS SET NAME=?, manufacturer=?, DEBUT_YEAR=?, DERIVED_FROM_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM CHASSIS WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM CHASSIS";
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
 	public void insertar(Chassis chassis) throws DAOException {
-		try (
-				PreparedStatement statement = conexion.getConnection().prepareStatement(INSERTAR)) {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(INSERTAR)) {
 			statement.setInt(1, chassis.getId());
 			statement.setString(2, chassis.getNombre());
 			statement.setString(3, chassis.getFabricante());
@@ -36,15 +36,14 @@ public class ChassisImpl implements ChassisDAO {
 
 	@Override
 	public Chassis obtenerPorId(int id) throws DAOException {
-		try (
-				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_POR_ID)) {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_POR_ID)) {
 			statement.setInt(1, id);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
 					return new Chassis(
 							resultSet.getInt("ID"),
 							resultSet.getString("NAME"),
-							resultSet.getString("MANUFACTER"),
+							resultSet.getString("manufacturer"),
 							resultSet.getInt("DEBUT_YEAR"),
 							resultSet.getInt("DERIVED_FROM_ID")
 					);
@@ -59,14 +58,13 @@ public class ChassisImpl implements ChassisDAO {
 	@Override
 	public List<Chassis> obtenerTodas() throws DAOException {
 		List<Chassis> chassisList = new ArrayList<>();
-		try (
-				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_TODOS);
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_TODOS);
 				ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
 				Chassis chassis = new Chassis(
 						resultSet.getInt("ID"),
 						resultSet.getString("NAME"),
-						resultSet.getString("MANUFACTER"),
+						resultSet.getString("manufacturer"),
 						resultSet.getInt("DEBUT_YEAR"),
 						resultSet.getInt("DERIVED_FROM_ID")
 				);
@@ -79,8 +77,7 @@ public class ChassisImpl implements ChassisDAO {
 
 	@Override
 	public void actualizar(Chassis chassis) throws DAOException {
-		try (
-				PreparedStatement statement = conexion.getConnection().prepareStatement(ACTUALIZAR)) {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(ACTUALIZAR)) {
 			statement.setString(1, chassis.getNombre());
 			statement.setString(2, chassis.getFabricante());
 			statement.setInt(3, chassis.getAnyo_debut());
@@ -94,12 +91,24 @@ public class ChassisImpl implements ChassisDAO {
 
 	@Override
 	public void eliminar(int id) throws DAOException {
-		try (
-				PreparedStatement statement = conexion.getConnection().prepareStatement(ELIMINAR)) {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(ELIMINAR)) {
 			statement.setInt(1, id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DAOException("Error deleting Chassis", e);
 		}
+	}
+
+	@Override
+	public int obtenerUltimoID() throws DAOException {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+				ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error obteniendo el último ID de Categoria", e);
+		}
+		return 0;
 	}
 }

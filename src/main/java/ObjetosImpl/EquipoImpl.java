@@ -18,6 +18,8 @@ public class EquipoImpl implements EquipoDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM TEAM";
 	private static final String ACTUALIZAR = "UPDATE TEAM SET NAME=?, DESCRIPTION=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM TEAM WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM TEAM";
+
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
@@ -94,5 +96,20 @@ public class EquipoImpl implements EquipoDAO {
 		} catch (SQLException e) {
 			throw new DAOException("Error deleting Equipo", e);
 		}
+	}
+
+	@Override
+	public int obtenerUltimoID() throws DAOException {
+		try (
+			 PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+			 ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting last ID", e);
+		}
+		return 0;
+		
 	}
 }

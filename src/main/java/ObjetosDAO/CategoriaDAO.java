@@ -12,5 +12,6 @@ public interface CategoriaDAO {
 	List<Categoria> obtenerTodas() throws DAOException;
 	void actualizar(Categoria categoria) throws DAOException;
 	void eliminar(int id ) throws DAOException;
-	
+	int obtenerUltimoID() throws DAOException;
+
 }

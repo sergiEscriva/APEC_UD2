@@ -15,8 +15,9 @@ public class CategoriaServicio {
         this.categoriaDAO = new CategoriaImpl();
     }
 
-    public void agregarCategoria(String nombre, String nombreCorto, int relevancia) {
+    public void agregarCategoria(int id, String nombre, String nombreCorto, int relevancia) {
         Categoria categoria = new Categoria();
+        categoria.setId(id);
         categoria.setNombre(nombre);
         categoria.setNombre_corto(nombreCorto);
         categoria.setRelevancia(relevancia);
@@ -63,5 +64,8 @@ public class CategoriaServicio {
         } catch (DAOException e) {
             e.printStackTrace();
         }
+    }
+    public int obtenerUltimoID() throws DAOException {
+        return categoriaDAO.obtenerUltimoID();
     }
 }
