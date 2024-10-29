@@ -11,4 +11,5 @@ public interface RuedasDAO {
 	List<Ruedas> obtenerTodas() throws DAOException;
 	void actualizar(Ruedas ruedasE) throws DAOException;
 	void eliminar(int id ) throws DAOException;
+	int obtenerUltimoID() throws DAOException;
 }

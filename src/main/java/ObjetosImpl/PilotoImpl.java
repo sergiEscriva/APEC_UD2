@@ -5,8 +5,10 @@ import Excepciones.DAOException;
 import Objetos.Piloto;
 import ObjetosDAO.PilotoDAO;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public class PilotoImpl implements PilotoDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM DRIVER";
 	private static final String	ACTUALIZAR = "UPDATE DRIVER SET NAME=?, SURNAME=?, BIRTH_DATE=?, DEATH_DATE=?, NACIONALITY=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM DRIVER WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM DRIVER";
 	
 	ConexionMs conexion = new ConexionMs();
 
@@ -28,8 +31,8 @@ public class PilotoImpl implements PilotoDAO {
 			ps.setInt(1, piloto.getId());
 			ps.setString(2, piloto.getNombre());
 			ps.setString(3, piloto.getApellido());
-			ps.setString(4, piloto.getFecha_nacimiento());
-			ps.setString(5, piloto.getFecha_muerte());
+			ps.setDate(4, Date.valueOf(piloto.getFecha_nacimiento()));
+			ps.setDate(5, Date.valueOf(piloto.getFecha_muerte()));
 			ps.setString(6, piloto.getLugar_muerte());
 			ps.setString(7, piloto.getNacionalidad());
 			int filas_afectadas = ps.executeUpdate();
@@ -80,8 +83,8 @@ public class PilotoImpl implements PilotoDAO {
 		try (PreparedStatement ps = conexion.getConnection().prepareStatement(ACTUALIZAR)) {
 			ps.setString(1, piloto.getNombre());
 			ps.setString(2, piloto.getApellido());
-			ps.setString(3, piloto.getFecha_nacimiento());
-			ps.setString(4, piloto.getFecha_muerte());
+			ps.setDate(3, Date.valueOf(piloto.getFecha_nacimiento()));
+			ps.setDate(4, Date.valueOf(piloto.getFecha_muerte()));
 			ps.setString(5, piloto.getNacionalidad());
 			ps.setInt(6, piloto.getId());
 			int filas_afectadas = ps.executeUpdate();
@@ -107,13 +110,27 @@ public class PilotoImpl implements PilotoDAO {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public int obtenerUltimoID() throws DAOException {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+			 ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error obteniendo el último ID de Categoria", e);
+		}
+		return 0;
+	}
+
 	public static Piloto crearPiloto(ResultSet rs){
 		Piloto piloto = null;
 		int id = 0;
 		String nombre = null;
 		String apellido = null;
-		String fecha_nacimiento = null;
-		String fecha_muerte = null;
+		LocalDate fecha_nacimiento = null;
+		LocalDate fecha_muerte = null;
 		String lugar_muerte = null;
 		String nacionalidad = null;
 		
@@ -122,8 +139,8 @@ public class PilotoImpl implements PilotoDAO {
 			id = rs.getInt("id");
 			nombre = rs.getString("name");
 			apellido = rs.getString("surname");
-			fecha_nacimiento = rs.getString("birth_date");
-			fecha_muerte = rs.getString("death_date");
+			fecha_nacimiento = rs.getDate("birth_date").toLocalDate();
+			fecha_muerte = rs.getDate("death_date").toLocalDate();
 			lugar_muerte =rs.getString("death_place");
 			nacionalidad = rs.getString("nationality");
 			

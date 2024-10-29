@@ -1,10 +1,6 @@
 import Excepciones.DAOException;
-import Objetos.Categoria;
-import Objetos.Chassis;
-import Objetos.Equipo;
-import ObjetosSerivios.CategoriaServicio;
-import ObjetosSerivios.ChassisServicio;
-import ObjetosSerivios.EquipoServicio;
+import Objetos.*;
+import ObjetosSerivios.*;
 
 import java.time.LocalDate;
 import java.util.InputMismatchException;
@@ -73,7 +69,6 @@ public class GestionEventos {
 				}
 				default -> finalizar = Boolean.TRUE;
 			}
-			sc.nextLine();
 		} while (!finalizar);
 
 	}
@@ -95,8 +90,10 @@ public class GestionEventos {
 		do {
 			imprimirGestion();
 			switch (seleccionGestion()) {
-				case 1 -> chassis.agregarChassis(obtenerID(ultimoId), obtenerNombre(), obtenerFabricante(), obtenerAnyoDebut(), obtenerDerivado());
-				case 2 -> chassis.actualizarChassis(obtenerID(), obtenerNombre(), obtenerFabricante(), obtenerAnyoDebut(), obtenerID());
+				case 1 ->
+						chassis.agregarChassis(obtenerID(ultimoId), obtenerNombre(), obtenerFabricante(), obtenerAnyoDebut(), obtenerDerivado());
+				case 2 ->
+						chassis.actualizarChassis(obtenerID(), obtenerNombre(), obtenerFabricante(), obtenerAnyoDebut(), obtenerID());
 				case 3 -> chassis.eliminarChassis(obtenerID());
 				case 4 -> {
 					Chassis chassisEncontrado = chassis.obtenerChassis(obtenerID());
@@ -112,7 +109,6 @@ public class GestionEventos {
 				}
 				default -> finalizar = Boolean.TRUE;
 			}
-			sc.nextLine();
 
 		} while (!finalizar);
 
@@ -128,6 +124,7 @@ public class GestionEventos {
 	}
 
 	private static void gestionarEntradaPiloto() {
+		// Implement CRUD operations for EntradaPiloto
 		System.out.println("Gestionando EntradaPiloto");
 	}
 
@@ -156,13 +153,12 @@ public class GestionEventos {
 				}
 				default -> finalizar = Boolean.TRUE;
 			}
-			sc.nextLine();
-		}while (!finalizar);
+		} while (!finalizar);
 
 
 	}
-	
-	private static int obtenerUltimoIdEquipo(EquipoServicio equipoServicio){
+
+	private static int obtenerUltimoIdEquipo(EquipoServicio equipoServicio) {
 		try {
 			return equipoServicio.obtenerUltimoId();
 		} catch (DAOException e) {
@@ -170,6 +166,7 @@ public class GestionEventos {
 		}
 		return 0;
 	}
+
 	private static void gestionarEvento() {
 		// Implement CRUD operations for Evento
 		System.out.println("Gestionando Evento");
@@ -181,13 +178,72 @@ public class GestionEventos {
 	}
 
 	private static void gestionarPiloto() {
-		// Implement CRUD operations for Piloto
-		System.out.println("Gestionando Piloto");
+		PilotoServicio piloto = new PilotoServicio();
+		int ultimoId = obtenerUltimoIdPiloto(piloto);
+		List<Piloto> pilotoList;
+		boolean finalizar = Boolean.FALSE;
+		switch (seleccionGestion()) {
+			case 1 ->
+					piloto.agregarPiloto(obtenerID(ultimoId), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
+			case 2 ->
+					piloto.actualizarPiloto(obtenerID(), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
+			case 3 -> piloto.eliminarPiloto(obtenerID());
+			case 4 -> {
+				Piloto pilotoEncontrado = piloto.obtenerPiloto(obtenerID());
+				if (pilotoEncontrado != null) {
+					System.out.println(pilotoEncontrado);
+				} else {
+					System.out.println("Piloto no encontrado");
+				}
+			}
+			case 5 -> {
+				pilotoList = piloto.listarPilotos();
+				pilotoList.forEach(System.out::println);
+			}
+			default -> finalizar = Boolean.TRUE;
+		}
+	}
+
+	private static int obtenerUltimoIdPiloto(PilotoServicio pilotoServicio) {
+
+		return pilotoServicio.obtenerUltimoId();
+
+	}
+
+	private static int obtenerUltimoIdProveedorRuedas(RuedasServicio ruedasServicio) {
+
+		return ruedasServicio.obtenerUltimoId();
+
 	}
 
 	private static void gestionarProveedorRuedas() {
-		// Implement CRUD operations for Proveedor de Ruedas
-		System.out.println("Gestionando Proveedor de Ruedas");
+		RuedasServicio ruedas = new RuedasServicio();
+		int ultimoID = obtenerUltimoIdProveedorRuedas(ruedas);
+		List<Ruedas> ruedasList;
+		boolean finalizar = Boolean.FALSE;
+		do {
+			imprimirGestion();
+			switch (seleccionGestion()) {
+				case 1 ->
+						ruedas.agregarRuedas(obtenerID(ultimoID), obtenerNombre(), obtenerColorLetra(), obtenerColorFondo());
+				case 2 ->
+						ruedas.actualizarRuedas(obtenerID(), obtenerNombre(), obtenerColorLetra(), obtenerColorFondo());
+				case 3 -> ruedas.eliminarRuedas(obtenerID());
+				case 4 -> {
+					Ruedas ruedasEncontrado = ruedas.obtenerRuedas(obtenerID());
+					if (ruedasEncontrado != null) {
+						System.out.println(ruedasEncontrado);
+					} else {
+						System.out.println("Provedor de ruedas no encontrado");
+					}
+				}
+				case 5 -> {
+					ruedasList = ruedas.listarRuedas();
+					ruedasList.forEach(System.out::println);
+				}
+				default -> finalizar = Boolean.TRUE;
+			}
+		} while (!finalizar);
 	}
 
 	private static int seleccionGestion() {
@@ -238,8 +294,8 @@ public class GestionEventos {
 
 		return resultado;
 	}
-	
-	private static int obtenerDerivado(){
+
+	private static int obtenerDerivado() {
 		System.out.println("Obtener id del derivado: ");
 		int resultado = 0;
 		boolean correcto = Boolean.FALSE;
@@ -336,9 +392,43 @@ public class GestionEventos {
 
 		return resultado;
 	}
-	
-	private static String  obtenerDescripcion(){
+
+	private static String obtenerDescripcion() {
 		System.out.println("Intruduzca la descripcion: ");
+		return sc.nextLine();
+	}
+
+	private static String obtenerApellido() {
+		System.out.println("Introduzca el apellido: ");
+		return sc.nextLine();
+	}
+
+	private static LocalDate obtenerFechaNacimiento() {
+		System.out.println("Introduzca la fecha de nacimiento: ");
+		return LocalDate.parse(sc.nextLine());
+	}
+
+	private static LocalDate obtenerFechaMuerte() {
+		System.out.println("Introduzca la fecha de muerte: ");
+		return LocalDate.parse(sc.nextLine());
+	}
+
+	private static String obtenerLugarMuerte() {
+		System.out.println("Introduzca el lugar de muerte: ");
+		return sc.nextLine();
+	}
+
+	private static String obtenerNacionalidad() {
+		System.out.println("Introduzca la nacionalidad: ");
+		return sc.nextLine();
+	}
+	
+	private static String obtenerColorLetra() {
+		System.out.println("Introduzca el color de la letra: ");
+		return sc.nextLine();
+	}
+	private static String obtenerColorFondo() {
+		System.out.println("Introduzca el color de fondo: ");
 		return sc.nextLine();
 	}
 

@@ -15,8 +15,9 @@ public class RuedasServicio {
         this.ruedasDAO = new RuedasImpl();
     }
 
-    public void agregarRuedas(String nombre, String colorLetra, String colorFondo) {
+    public void agregarRuedas(int id, String nombre, String colorLetra, String colorFondo) {
         Ruedas ruedas = new Ruedas();
+        ruedas.setId(id);
         ruedas.setNombre(nombre);
         ruedas.setColor_letra(colorLetra);
         ruedas.setColor_fondo(colorFondo);
@@ -62,6 +63,14 @@ public class RuedasServicio {
             System.out.println("Ruedas eliminadas con ID: " + id);
         } catch (DAOException e) {
             e.printStackTrace();
+        }
+    }
+    public int obtenerUltimoId() {
+        try {
+            return ruedasDAO.obtenerUltimoID();
+        } catch (DAOException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

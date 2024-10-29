@@ -14,10 +14,11 @@ import java.util.List;
 
 public class RuedasImpl implements RuedasDAO {
 	private static final String INSERTAR = "INSERT INTO TYRE_PROVIDER(ID, NAME, LETTER_COLOR, BACKGROUND_COLOR) VALUES (?,?,?,?,?,?,?)";
-	private static final String OBTENER_POR_ID = "SELECT * FROM DRIVER WHERE ID =?";
-	private static final String OBTENER_TODOS = "SELECT * FROM DRIVER";
-	private static final String ACTUALIZAR = "UPDATE DRIVER SET NAME=?, SURNAME=?, BIRTH_DATE=?, DEATH_DATE=?, NACIONALITY=? WHERE ID=?";
-	private static final String ELIMINAR = "DELETE FROM DRIVER WHERE ID =?";
+	private static final String OBTENER_POR_ID = "SELECT * FROM TYRE_PROVIDER WHERE ID =?";
+	private static final String OBTENER_TODOS = "SELECT * FROM TYRE_PROVIDER";
+	private static final String ACTUALIZAR = "UPDATE TYRE_PROVIDER SET NAME=?, SURNAME=?, BIRTH_DATE=?, DEATH_DATE=?, NACIONALITY=? WHERE ID=?";
+	private static final String ELIMINAR = "DELETE FROM TYRE_PROVIDER WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM TYRE_PROVIDER";
 
 	ConexionMs conexion = new ConexionMs();
 
@@ -97,5 +98,19 @@ public class RuedasImpl implements RuedasDAO {
 		} catch (SQLException e) {
 			throw new DAOException("Error deleting Ruedas", e);
 		}
+	}
+
+	@Override
+	public int obtenerUltimoID() throws DAOException {
+		try (
+			 PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+			 ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting last Ruedas ID", e);
+		}
+		return 0;
 	}
 }

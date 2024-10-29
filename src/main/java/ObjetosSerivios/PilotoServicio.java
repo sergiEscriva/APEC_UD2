@@ -5,6 +5,7 @@ import ObjetosImpl.PilotoImpl;
 import Objetos.Piloto;
 import Excepciones.DAOException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class PilotoServicio {
@@ -15,8 +16,9 @@ public class PilotoServicio {
         this.pilotoDAO = new PilotoImpl();
     }
 
-    public void agregarPiloto(String nombre, String apellido, String fechaMuerte, String fechaNacimiento, String lugarMuerte, String nacionalidad) {
+    public void agregarPiloto(int id, String nombre, String apellido, LocalDate fechaMuerte, LocalDate fechaNacimiento, String lugarMuerte, String nacionalidad) {
         Piloto piloto = new Piloto();
+        piloto.setId(id);
         piloto.setNombre(nombre);
         piloto.setApellido(apellido);
         piloto.setFecha_muerte(fechaMuerte);
@@ -49,7 +51,7 @@ public class PilotoServicio {
         }
     }
 
-    public void actualizarPiloto(int id, String nombre, String apellido, String fechaMuerte, String fechaNacimiento, String lugarMuerte, String nacionalidad) {
+    public void actualizarPiloto(int id, String nombre, String apellido, LocalDate fechaMuerte, LocalDate fechaNacimiento, String lugarMuerte, String nacionalidad) {
         Piloto piloto = new Piloto(id, nombre, apellido, fechaMuerte, fechaNacimiento, lugarMuerte, nacionalidad);
         try {
             pilotoDAO.actualizar(piloto);
@@ -66,5 +68,13 @@ public class PilotoServicio {
         } catch (DAOException e) {
             e.printStackTrace();
         }
+    }
+    public int obtenerUltimoId() {
+        try {
+            return pilotoDAO.obtenerUltimoID();
+        } catch (DAOException e) {
+            System.out.println("Error en la obencion del ultimo ID");
+        }
+        return 0;
     }
 }

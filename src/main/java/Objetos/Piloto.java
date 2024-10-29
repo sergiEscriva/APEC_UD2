@@ -12,8 +12,8 @@ public class Piloto {
 	private int id;
 	private String nombre;
 	private String apellido;
-	private String fecha_muerte;
-	private String fecha_nacimiento;
+	private LocalDate fecha_muerte;
+	private LocalDate fecha_nacimiento;
 	private String lugar_muerte;
 	private String nacionalidad;
 
