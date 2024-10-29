@@ -27,7 +27,7 @@ public class MotorImpl implements MotorDAO {
 			ps.setString(3, motor.getFabricante());
 			ps.setInt(4, motor.getCapacidad());
 			ps.setString(5, motor.getArquitectura());
-			ps.setString(6, motor.getAnyo_debut());
+			ps.setInt(6, motor.getAnyo_debut());
 			ps.setBoolean(7, motor.isGasolina());
 			ps.setBoolean(8, motor.isDiesel());
 			ps.setBoolean(9, motor.isElectrico());
@@ -75,7 +75,7 @@ public class MotorImpl implements MotorDAO {
 			ps.setString(2, motor.getFabricante());
 			ps.setInt(3, motor.getCapacidad());
 			ps.setString(4, motor.getArquitectura());
-			ps.setString(5, motor.getAnyo_debut());
+			ps.setInt(5, motor.getAnyo_debut());
 			ps.setBoolean(6, motor.isGasolina());
 			ps.setBoolean(7, motor.isDiesel());
 			ps.setBoolean(8, motor.isElectrico());
@@ -126,7 +126,7 @@ public class MotorImpl implements MotorDAO {
 		String fabricante = null;
 		int capacidad = 0;
 		String arquitectura = null;
-		String anyo_debut = null;
+		int anyo_debut = 0;
 		boolean gasolina = false;
 		boolean diesel = false;
 		boolean electrico = false;
@@ -140,7 +140,7 @@ public class MotorImpl implements MotorDAO {
 			fabricante = rs.getString("MANUFACTER");
 			capacidad = rs.getInt("CAPACITY");
 			arquitectura = rs.getString("ARCHITECTURE");
-			anyo_debut = rs.getString("DEBUT_YEAR");
+			anyo_debut = rs.getInt("DEBUT_YEAR");
 			gasolina = rs.getBoolean("PETROL_ENGINE");
 			diesel = rs.getBoolean("DIESEL_ENGINE");
 			electrico = rs.getBoolean("ELECTRIC_ENGINE");
