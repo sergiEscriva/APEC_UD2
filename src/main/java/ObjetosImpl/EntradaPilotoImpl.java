@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntradaPilotoImpl implements EntradaPilotoDAO {
-	private static final String INSERTAR = "INSERT INTO DRIVER_ENTRY(ENTRY_ID, DRIVER_ID, ROOKIE, CATEGORY) VALUES (?,?,?,?,?,?,?)";
-	private static final String OBTENER_POR_ID = "SELECT * FROM DRIVER_ENTRY WHERE ID =? AND DRIVER_ID =?";
-	private static final String OBTENER_TODOS = "SELECT * FROM DRIVER_ENTRY";
-	private static final String ACTUALIZAR = "UPDATE DRIVER_ENTRY SET ROOKIE=?, ROOKIE=? WHERE ENTRY_ID=?, DRIVER_ID=?";
-	private static final String ELIMINAR = "DELETE FROM DRIVER_ENTRY WHERE ENTRY_ID=?, DRIVER_ID=?";
-	private static final String ENTRADA_EXISTENTE = "SELECT COUNT(*) AS count FROM DRIVER_ENTRY WHERE ENTRY_ID = ? AND DRIVER_ID = ?";
+	private static final String INSERTAR = "INSERT INTO DRIVERS_ENTRY(ENTRY_ID, DRIVER_ID, ROOKIE, CATEGORY) VALUES (?,?,?,?,?,?,?)";
+	private static final String OBTENER_POR_ID = "SELECT * FROM DRIVERS_ENTRY WHERE ID =? AND DRIVER_ID =?";
+	private static final String OBTENER_TODOS = "SELECT * FROM DRIVERS_ENTRY";
+	private static final String ACTUALIZAR = "UPDATE DRIVERS_ENTRY SET ROOKIE=?, ROOKIE=? WHERE ENTRY_ID=?, DRIVER_ID=?";
+	private static final String ELIMINAR = "DELETE FROM DRIVERS_ENTRY WHERE ENTRY_ID=?, DRIVER_ID=?";
+	private static final String ENTRADA_EXISTENTE = "SELECT COUNT(*) AS count FROM DRIVERS_ENTRY WHERE ENTRY_ID = ? AND DRIVER_ID = ?";
 	ConexionMs conexion = new ConexionMs();
 
 
@@ -122,5 +122,6 @@ public class EntradaPilotoImpl implements EntradaPilotoDAO {
 		}
 		return false;
 	}
+	
 
 }

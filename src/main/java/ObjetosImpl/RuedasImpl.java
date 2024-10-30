@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RuedasImpl implements RuedasDAO {
-	private static final String INSERTAR = "INSERT INTO TYRE_PROVIDER(ID, NAME, LETTER_COLOR, BACKGROUND_COLOR) VALUES (?,?,?,?,?,?,?)";
+	private static final String INSERTAR = "INSERT INTO TYRE_PROVIDER(ID, NAME, LETTER_COLOR, BACKGROUND_COLOR) VALUES (?,?,?,?)";
 	private static final String OBTENER_POR_ID = "SELECT * FROM TYRE_PROVIDER WHERE ID =?";
 	private static final String OBTENER_TODOS = "SELECT * FROM TYRE_PROVIDER";
-	private static final String ACTUALIZAR = "UPDATE TYRE_PROVIDER SET NAME=?, SURNAME=?, BIRTH_DATE=?, DEATH_DATE=?, NACIONALITY=? WHERE ID=?";
+	private static final String ACTUALIZAR = "UPDATE TYRE_PROVIDER SET NAME=?, LETTER_COLOR=?, BACKGROUND_COLOR=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM TYRE_PROVIDER WHERE ID =?";
 	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM TYRE_PROVIDER";
 

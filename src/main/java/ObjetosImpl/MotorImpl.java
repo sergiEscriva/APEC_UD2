@@ -14,7 +14,7 @@ public class MotorImpl implements MotorDAO {
 	private static final String INSERTAR = "INSERT INTO MOTOR(ID, NAME, MANUFACTER, CAPACITY, ARCHITECTURE, DEBUT_YEAR, PETROL_ENGINE, DIESEL_ENGINE, ELECTRIC_ENGINE, TURBO, DERIVED_FROM_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String OBTENER_POR_ID = "SELECT * FROM ENGINE WHERE ID =?";
 	private static final String OBTENER_TODOS = "SELECT * FROM ENGINE";
-	private static final String ACTUALIZAR = "UPDATE MOTOR SET NAME=?, MANUFACTER=?, CAPACITY=?, ARCHITECTURE=?, DEBUT_YEAR=?, PETROL_ENGINE=?, DIESEL_ENGINE=?, ELECTRIC_ENGINE=?, TURBO=?, DERIVED_FROM_ID=? WHERE ID=?";
+	private static final String ACTUALIZAR = "UPDATE ENGINE SET NAME=?, MANUFACTER=?, CAPACITY=?, ARCHITECTURE=?, DEBUT_YEAR=?, PETROL_ENGINE=?, DIESEL_ENGINE=?, ELECTRIC_ENGINE=?, TURBO=?, DERIVED_FROM_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM ENGINE WHERE ID =?";
 	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM ENGINE";	
 	ConexionMs conexion = new ConexionMs();
@@ -137,13 +137,13 @@ public class MotorImpl implements MotorDAO {
 
 			id = rs.getInt("ID");
 			nombre = rs.getString("NAME");
-			fabricante = rs.getString("MANUFACTER");
+			fabricante = rs.getString("manufacturer");
 			capacidad = rs.getInt("CAPACITY");
-			arquitectura = rs.getString("ARCHITECTURE");
-			anyo_debut = rs.getInt("DEBUT_YEAR");
-			gasolina = rs.getBoolean("PETROL_ENGINE");
-			diesel = rs.getBoolean("DIESEL_ENGINE");
-			electrico = rs.getBoolean("ELECTRIC_ENGINE");
+			arquitectura = rs.getString("architecture");
+			anyo_debut = rs.getInt("debut_year");
+			gasolina = rs.getBoolean("petrol_engine");
+			diesel = rs.getBoolean("diesel_engine");
+			electrico = rs.getBoolean("electric_engine");
 			turbo = rs.getBoolean("TURBO");
 			derivado_desde_id = rs.getInt("DERIVED_FROM_ID");
 

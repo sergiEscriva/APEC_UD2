@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventoImpl implements EventoDAO {
-	private static final String INSERTAR = "INSERT INTO EVENT_ENTRY(ID, TEAM_NAME, CHASSIS_ID, ENGINE_ID, OPERATED_BY_ID, EVENT_EDITION_ID, RACE_NUMBER, TEAM_ID, CATEGORY_ID) VALUES (?,?,?,?,?,?,?,?,?)";
+	private static final String INSERTAR = "INSERT INTO EVENT_ENTRY(ID, TEAM_NAME, CHASSIS_ID, ENGINE_ID, OPERATED_BY_ID, EVENT_EDITION_ID, RACE_NUMBER, TEAM_ID, CATEGORY_ID, TYRES_ID) VALUES (?,?,?,?,?,?,?,?,?, ?)";
 	private static final String OBTENER_POR_ID = "SELECT * FROM EVENT_ENTRY WHERE ID =?";
 	private static final String OBTENER_TODOS = "SELECT * FROM EVENT_ENTRY";
 	private static final String ACTUALIZAR = "UPDATE EVENT_ENTRY SET TEAM_NAME=?, CHASSIS_ID=?, ENGINE_ID=?, OPERATED_BY_ID=?, EVENT_EDITION_ID=?, RACE_NUMBER=?, TEAM_ID=?, CATEGORY_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM EVENT_ENTRY WHERE ID =?";
-	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM EVENT_ENTTRY";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM EVENT_ENTRY";
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
@@ -33,6 +33,7 @@ public class EventoImpl implements EventoDAO {
 			statement.setString(7, evento.getNumero_piloto());
 			statement.setInt(8, evento.getEquipo_id());
 			statement.setInt(9, evento.getCategoria_id());
+			statement.setInt(10, evento.getRuedas_id());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DAOException("Error inserting Evento", e);

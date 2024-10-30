@@ -20,8 +20,6 @@ public class EntradaPilotoServicio {
 				System.out.println("Error: El ID ya existe.");
 				return;
 			}
-
-			// Si no existe, insertar el nuevo registro
 			EntradaPiloto entradaPiloto = new EntradaPiloto(entryId, driverId, rookie, category);
 			entradaPilotoDAO.insertar(entradaPiloto);
 			System.out.println("EntradaPiloto agregada con ID: " + entradaPiloto.getEntrada_id());
@@ -67,4 +65,6 @@ public class EntradaPilotoServicio {
 			e.printStackTrace();
 		}
 	}
+
+	
 }

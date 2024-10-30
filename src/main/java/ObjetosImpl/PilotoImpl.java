@@ -73,7 +73,7 @@ public class PilotoImpl implements PilotoDAO {
 			}
 			
 		}catch (Exception e){
-			
+			throw new DAOException("Error getting all pilots", e);			
 		}
 		return pilotos;
 	}
@@ -124,31 +124,15 @@ public class PilotoImpl implements PilotoDAO {
 		return 0;
 	}
 
-	public static Piloto crearPiloto(ResultSet rs){
-		Piloto piloto = null;
-		int id = 0;
-		String nombre = null;
-		String apellido = null;
-		LocalDate fecha_nacimiento = null;
-		LocalDate fecha_muerte = null;
-		String lugar_muerte = null;
-		String nacionalidad = null;
-		
-		try {
+	public static Piloto crearPiloto(ResultSet rs) throws SQLException {
+		int id = rs.getInt("id");
+		String nombre = rs.getString("name");
+		String apellido = rs.getString("surname");
+		LocalDate fecha_nacimiento = rs.getDate("birth_date") != null ? rs.getDate("birth_date").toLocalDate() : null;
+		LocalDate fecha_muerte = rs.getDate("death_date") != null ? rs.getDate("death_date").toLocalDate() : null;
+		String lugar_muerte = rs.getString("death_place");
+		String nacionalidad = rs.getString("nationality");
 
-			id = rs.getInt("id");
-			nombre = rs.getString("name");
-			apellido = rs.getString("surname");
-			fecha_nacimiento = rs.getDate("birth_date").toLocalDate();
-			fecha_muerte = rs.getDate("death_date").toLocalDate();
-			lugar_muerte =rs.getString("death_place");
-			nacionalidad = rs.getString("nationality");
-			
-			piloto = new Piloto(id, nombre, apellido, fecha_nacimiento, fecha_muerte, lugar_muerte, nacionalidad);
-			
-		}catch (Exception e){
-			
-		}
-		return piloto;
+		return new Piloto(id, nombre, apellido, fecha_nacimiento, fecha_muerte, lugar_muerte, nacionalidad);
 	}
 }

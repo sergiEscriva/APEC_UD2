@@ -18,8 +18,6 @@ public class GestionEventos {
 
 		System.out.println("Bienvenid@ al creador de eventos de MotorSport");
 		System.out.println("Elija la tabla a la que quiere acceder");
-		imprimirTalbas();
-
 		seleccionOpcion();
 
 
@@ -41,7 +39,8 @@ public class GestionEventos {
 				"2. Modificar\n" +
 				"3. Eliminar\n" +
 				"4. Buscar\n" +
-				"5. Ver Todos");
+				"5. Ver Todos\n" +
+				"!. Salir");
 	}
 
 	private static void gestionarCategoria() {
@@ -126,6 +125,7 @@ public class GestionEventos {
 		return 0;
 	}
 
+	//TODO: Implementar verificacion de IDs
 	private static void gestionarEntradaPiloto() {
 		EntradaPilotoServicio entradaPiloto = new EntradaPilotoServicio();
 		List<EntradaPiloto> entradaPilotoList;
@@ -133,8 +133,10 @@ public class GestionEventos {
 		do {
 			imprimirGestion();
 			switch (seleccionGestion()) {
-				case 1 -> entradaPiloto.agregarEntradaPiloto(obtenerID(), obtenerPilotoId(), obtenerRookie(), obtenerCategoria());
-				case 2 -> entradaPiloto.actualizarEntradaPiloto(obtenerID(), obtenerPilotoId(), obtenerRookie(), obtenerCategoria());
+				case 1 ->
+						entradaPiloto.agregarEntradaPiloto(obtenerEquipoId(), obtenerPilotoId(), obtenerRookie(), obtenerChassisId());
+				case 2 ->
+						entradaPiloto.actualizarEntradaPiloto(obtenerID(), obtenerPilotoId(), obtenerRookie(), obtenerCategoria());
 				case 3 -> entradaPiloto.eliminarEntradaPiloto(obtenerID(), obtenerID());
 				case 4 -> {
 					EntradaPiloto entradaPilotoEncontrado = entradaPiloto.obtenerEntradaPiloto(obtenerID(), obtenerID());
@@ -152,6 +154,7 @@ public class GestionEventos {
 			}
 		} while (!finalizar);
 	}
+
 
 	private static void gestionarEquipo() {
 		EquipoServicio equipo = new EquipoServicio();
@@ -200,8 +203,10 @@ public class GestionEventos {
 		do {
 			imprimirGestion();
 			switch (seleccionGestion()) {
-				case 1 -> evento.agregarEvento(obtenerID(ultimoID), obtenerNombre(),obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(),obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(),obtenerCategoriaId());
-				case 2 -> evento.actualizarEvento(obtenerID(),obtenerNombre(),obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(),obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(),obtenerCategoriaId());
+				case 1 ->
+						evento.agregarEvento(obtenerID(ultimoID), obtenerNombre(), obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(), obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(), obtenerCategoriaId());
+				case 2 ->
+						evento.actualizarEvento(obtenerID(), obtenerNombre(), obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(), obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(), obtenerCategoriaId());
 				case 3 -> evento.eliminarEvento(obtenerID());
 				case 4 -> {
 					Evento eventoEncontrado = evento.obtenerEvento(obtenerID());
@@ -219,9 +224,38 @@ public class GestionEventos {
 			}
 		} while (!finalizar);
 	}
+	private static int obtenerEventoId(EventoServicio eventoServicio) {
+		int eventoId = 0;
+		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de eventos? (s/n):");
+		if (verLista) {
+			List<Evento> eventoList = eventoServicio.listarEventos();
+			eventoList.forEach(evento -> System.out.println("ID: " + evento.getId()));
+		}
+
+		do {
+			System.out.println("Introduzca el ID del evento: ");
+			try {
+				eventoId = sc.nextInt();
+				Evento evento = eventoServicio.obtenerEvento(eventoId);
+				if (evento != null) {
+					exists = true;
+				} else {
+					System.out.println("ID del evento no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return eventoId;
+	}
+
 	private static int obtenerUltimoIdEvento(EventoServicio eventoServicio) {
 		return eventoServicio.obtenerUltimoId();
 	}
+
 	private static void gestionarMotor() {
 		MotorServicio motor = new MotorServicio();
 		int ultimoId = obtenerUltimoIdMotor(motor);
@@ -236,7 +270,7 @@ public class GestionEventos {
 					if (gasolina && diesel) {
 						System.out.println("Un motor no puede ser gasolina y diesel a la vez.");
 					} else {
-						motor.agregarMotor(obtenerID(ultimoId), obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut() ,gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
+						motor.agregarMotor(obtenerID(ultimoId), obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut(), gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
 					}
 				}
 				case 2 -> {
@@ -245,7 +279,7 @@ public class GestionEventos {
 					if (gasolina && diesel) {
 						System.out.println("Un motor no puede ser gasolina y diesel a la vez.");
 					} else {
-						motor.actualizarMotor(obtenerID(),  obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut() ,gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
+						motor.actualizarMotor(obtenerID(), obtenerNombre(), obtenerFabricante(), obtenerCapacidad(), obtenerArquitectura(), obtenerAnyoDebut(), gasolina, diesel, obtenerElectrico(), obtenerTurbo(), obtenerDerivado());
 					}
 				}
 				case 3 -> motor.eliminarMotor(obtenerID());
@@ -264,38 +298,40 @@ public class GestionEventos {
 				default -> finalizar = Boolean.TRUE;
 			}
 		} while (!finalizar);
-		
+
 	}
-	
-	private static int obtenerUltimoIdMotor(MotorServicio motorServicio){
+
+	private static int obtenerUltimoIdMotor(MotorServicio motorServicio) {
 		return motorServicio.obtenerUltimoId();
 	}
 
 	private static void gestionarPiloto() {
 		PilotoServicio piloto = new PilotoServicio();
 		int ultimoId = obtenerUltimoIdPiloto(piloto);
-		
 		boolean finalizar = Boolean.FALSE;
-		switch (seleccionGestion()) {
-			case 1 ->
-					piloto.agregarPiloto(obtenerID(ultimoId), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
-			case 2 ->
-					piloto.actualizarPiloto(obtenerID(), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
-			case 3 -> piloto.eliminarPiloto(obtenerID());
-			case 4 -> {
-				Piloto pilotoEncontrado = piloto.obtenerPiloto(obtenerID());
-				if (pilotoEncontrado != null) {
-					System.out.println(pilotoEncontrado);
-				} else {
-					System.out.println("Piloto no encontrado");
+		do {
+			imprimirGestion();
+			switch (seleccionGestion()) {
+				case 1 ->
+						piloto.agregarPiloto(obtenerID(ultimoId), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
+				case 2 ->
+						piloto.actualizarPiloto(obtenerID(), obtenerNombre(), obtenerApellido(), obtenerFechaNacimiento(), obtenerFechaMuerte(), obtenerLugarMuerte(), obtenerNacionalidad());
+				case 3 -> piloto.eliminarPiloto(obtenerID());
+				case 4 -> {
+					Piloto pilotoEncontrado = piloto.obtenerPiloto(obtenerID());
+					if (pilotoEncontrado != null) {
+						System.out.println(pilotoEncontrado);
+					} else {
+						System.out.println("Piloto no encontrado");
+					}
 				}
+				case 5 -> {
+					pilotoList = piloto.listarPilotos();
+					pilotoList.forEach(System.out::println);
+				}
+				default -> finalizar = Boolean.TRUE;
 			}
-			case 5 -> {
-				pilotoList = piloto.listarPilotos();
-				pilotoList.forEach(System.out::println);
-			}
-			default -> finalizar = Boolean.TRUE;
-		}
+		} while (!finalizar);
 	}
 
 	private static int obtenerUltimoIdPiloto(PilotoServicio pilotoServicio) {
@@ -341,33 +377,60 @@ public class GestionEventos {
 	}
 
 	private static int seleccionGestion() {
-		char opcion = sc.nextLine().charAt(0);
 		int opcionElejida = 0;
-		switch (opcion) {
-			case '1' -> opcionElejida = 1;
-			case '2' -> opcionElejida = 2;
-			case '3' -> opcionElejida = 3;
-			case '4' -> opcionElejida = 4;
-			case '5' -> opcionElejida = 5;
-		}
+		boolean valido = false;
+		do {
+			String opcion = sc.nextLine().trim();
+			switch (opcion) {
+				case "1" -> {
+					opcionElejida = 1;
+					valido = true;
+				}
+				case "2" -> {
+					opcionElejida = 2;
+					valido = true;
+				}
+				case "3" -> {
+					opcionElejida = 3;
+					valido = true;
+				}
+				case "4" -> {
+					opcionElejida = 4;
+					valido = true;
+				}
+				case "5" -> {
+					opcionElejida = 5;
+					valido = true;
+				}
+				case "!" -> {
+					opcionElejida = 6;
+					valido = true;
+				}
+				default -> System.out.println("Opción no válida. Intente de nuevo.");
+			}
+		} while (!valido);
 		return opcionElejida;
 	}
 
 	private static void seleccionOpcion() {
-
-		char opcion = sc.nextLine().charAt(0);
-		switch (opcion) {
-			case '1' -> gestionarCategoria();
-			case '2' -> gestionarChassis();
-			case '3' -> gestionarEntradaPiloto();
-			case '4' -> gestionarEquipo();
-			case '5' -> gestionarEvento();
-			case '6' -> gestionarMotor();
-			case '7' -> gestionarPiloto();
-			case '8' -> gestionarProveedorRuedas();
-			default -> System.out.println("Opción no válida");
-		}
-
+		char opcion;
+		do {
+			imprimirTalbas();
+			System.out.println("Seleccione una opción (1-8) o '!' para salir:");
+			opcion = sc.nextLine().charAt(0);
+			switch (opcion) {
+				case '1' -> gestionarCategoria();
+				case '2' -> gestionarChassis();
+				case '3' -> gestionarEntradaPiloto();
+				case '4' -> gestionarEquipo();
+				case '5' -> gestionarEvento();
+				case '6' -> gestionarMotor();
+				case '7' -> gestionarPiloto();
+				case '8' -> gestionarProveedorRuedas();
+				case '!' -> System.out.println("Saliendo...");
+				default -> System.out.println("Opción no válida");
+			}
+		} while (opcion != '!');
 	}
 
 	private static int obtenerID() {
@@ -465,7 +528,7 @@ public class GestionEventos {
 	}
 
 	private static int obtenerAnyoDebut() {
-		System.out.println("Introduzca el anyo de debut: ");
+		System.out.println("Introduzca el anyo de debut: yyyy");
 		int resultado = 0;
 		boolean correcto = Boolean.FALSE;
 		int anyoActual = LocalDate.now().getYear();
@@ -498,13 +561,21 @@ public class GestionEventos {
 	}
 
 	private static LocalDate obtenerFechaNacimiento() {
-		System.out.println("Introduzca la fecha de nacimiento: ");
-		return LocalDate.parse(sc.nextLine());
+		System.out.println("Introduzca la fecha de nacimiento: (yyyy-dd-mm)");
+		String fecha_nacimiento = sc.nextLine();
+		if (fecha_nacimiento.isEmpty() || fecha_nacimiento.isBlank() || fecha_nacimiento.equalsIgnoreCase("null")) {
+			return null;
+		}
+		return LocalDate.parse(fecha_nacimiento);
 	}
 
 	private static LocalDate obtenerFechaMuerte() {
-		System.out.println("Introduzca la fecha de muerte: ");
-		return LocalDate.parse(sc.nextLine());
+		System.out.println("Introduzca la fecha de muerte: (yyyy-dd-mm)");
+		String fecha_muerte = sc.nextLine();
+		if (fecha_muerte.isEmpty() || fecha_muerte.isBlank() || fecha_muerte.equalsIgnoreCase("null")) {
+			return null;
+		}
+		return LocalDate.parse(fecha_muerte);
 	}
 
 	private static String obtenerLugarMuerte() {
@@ -516,16 +587,18 @@ public class GestionEventos {
 		System.out.println("Introduzca la nacionalidad: ");
 		return sc.nextLine();
 	}
-	
+
 	private static String obtenerColorLetra() {
 		System.out.println("Introduzca el color de la letra: ");
 		return sc.nextLine();
 	}
+
 	private static String obtenerColorFondo() {
 		System.out.println("Introduzca el color de fondo: ");
 		return sc.nextLine();
 	}
-	private static int obtenerCapacidad(){
+
+	private static int obtenerCapacidad() {
 		System.out.println("Introduzca la capacidad: ");
 		int resultado = 0;
 		boolean correcto = Boolean.FALSE;
@@ -545,7 +618,8 @@ public class GestionEventos {
 
 		return resultado;
 	}
-	private static String obtenerArquitectura(){
+
+	private static String obtenerArquitectura() {
 		System.out.println("Introduzca la arquitectura: ");
 		return sc.nextLine();
 	}
@@ -569,53 +643,43 @@ public class GestionEventos {
 		System.out.println("¿Tiene turbo? (true/false): ");
 		return sc.nextBoolean();
 	}
+
 	private static boolean obtenerRookie() {
 		System.out.println("¿Es rookie? (true/false): ");
 		return sc.nextBoolean();
 	}
+
 	private static void mostrarPilotos() {
 		pilotoList.forEach(System.out::println);
 	}
-	
+
 	private static int obtenerPilotoId() {
-		System.out.println("Desea ver la lista de pilotos? (true/false): ");
-		boolean verLista = sc.nextBoolean();
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de pilotos? (s/n):");
 		if (verLista) {
+			PilotoServicio pilotoServicio = new PilotoServicio();
+			pilotoList = pilotoServicio.listarPilotos();
 			mostrarPilotos();
 		}
 		System.out.println("Introduzca el ID del piloto: ");
 		return sc.nextInt();
 	}
-	
+
 	private static int obtenerCategoria() {
 		System.out.println("Introduzca el ID de la categoría: ");
 		return sc.nextInt();
 	}
-	private static int obtenerChassisId() {
-		ChassisServicio chassisServicio = new ChassisServicio();
-		int chassisId = 0;
-		boolean exists = false;
-		do {
-			System.out.println("Introduzca el ID del chassis: ");
-			try {
-				chassisId = sc.nextInt();
-				Chassis chassis = chassisServicio.obtenerChassis(chassisId);
-				if (chassis != null) {
-					exists = true;
-				} else {
-					System.out.println("Chassis ID no encontrado. Intente de nuevo.");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("Introduzca un número válido.");
-				sc.next();
-			}
-		} while (!exists);
-		return chassisId;
-	}
+
 	private static int obtenerMotorId() {
 		MotorServicio motorServicio = new MotorServicio();
 		int motorId = 0;
 		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de motor? (s/n):");
+		if (verLista) {
+			List<Motor> motorList = motorServicio.listarMotores();
+			motorList.forEach(motor -> System.out.println("ID: " + motor.getMotor() + ", Nombre: " + motor.getNombre()));
+		}
+
 		do {
 			System.out.println("Introduzca el ID del motor: ");
 			try {
@@ -633,15 +697,23 @@ public class GestionEventos {
 		} while (!exists);
 		return motorId;
 	}
+
 	private static int obtenerDirigidoPorId() {
 		EquipoServicio equipoServicio = new EquipoServicio();
-		int dirigidoPorId = 0;
+		int equipoId = 0;
 		boolean exists = false;
+		System.out.println("Introduzca el ID del equipo que dirige en el evento: ");
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de equipo? (s/n):");
+		if (verLista) {
+			List<Equipo> equipoList = equipoServicio.listarEquipos();
+			equipoList.forEach(equipo -> System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre()));
+		}
+
 		do {
-			System.out.println("Introduzca el ID del equipo que dirige: ");
+			System.out.println("Introduzca el ID del equipo: ");
 			try {
-				dirigidoPorId = sc.nextInt();
-				Equipo equipo = equipoServicio.obtenerEquipo(dirigidoPorId);
+				equipoId = sc.nextInt();
+				Equipo equipo = equipoServicio.obtenerEquipo(equipoId);
 				if (equipo != null) {
 					exists = true;
 				} else {
@@ -652,16 +724,25 @@ public class GestionEventos {
 				sc.next();
 			}
 		} while (!exists);
-		return dirigidoPorId;
+		return equipoId;
 	}
+
 	private static String obtenerNumeroPiloto() {
 		System.out.println("Introduzca el número del piloto en el evento: ");
 		return sc.nextLine();
 	}
+
 	private static int obtenerRuedasId() {
 		RuedasServicio ruedasServicio = new RuedasServicio();
 		int ruedasId = 0;
 		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de proveedor de ruedas? (s/n):");
+		if (verLista) {
+			List<Ruedas> ruedasList = ruedasServicio.listarRuedas();
+			ruedasList.forEach(ruedas -> System.out.println("ID: " + ruedas.getId() + ", Nombre: " + ruedas.getNombre()));
+		}
+
 		do {
 			System.out.println("Introduzca el ID del proveedor de ruedas: ");
 			try {
@@ -679,10 +760,18 @@ public class GestionEventos {
 		} while (!exists);
 		return ruedasId;
 	}
+
 	private static int obtenerCategoriaId() {
 		CategoriaServicio categoriaServicio = new CategoriaServicio();
 		int categoriaId = 0;
 		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de categoría? (s/n):");
+		if (verLista) {
+			List<Categoria> categoriaList = categoriaServicio.listarCategorias();
+			categoriaList.forEach(categoria -> System.out.println("ID: " + categoria.getId() + ", Nombre: " + categoria.getNombre()));
+		}
+
 		do {
 			System.out.println("Introduzca el ID de la categoría: ");
 			try {
@@ -700,10 +789,47 @@ public class GestionEventos {
 		} while (!exists);
 		return categoriaId;
 	}
+
+	private static int obtenerChassisId() {
+		ChassisServicio chassisServicio = new ChassisServicio();
+		int chassisId = 0;
+		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de chasis? (s/n):");
+		if (verLista) {
+			List<Chassis> chassisList = chassisServicio.listarChassis();
+			chassisList.forEach(chassis -> System.out.println("ID: " + chassis.getId() + ", Nombre: " + chassis.getNombre()));
+		}
+
+		do {
+			System.out.println("Introduzca el ID del chasis: ");
+			try {
+				chassisId = sc.nextInt();
+				Chassis chassis = chassisServicio.obtenerChassis(chassisId);
+				if (chassis != null) {
+					exists = true;
+				} else {
+					System.out.println("ID del chasis no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return chassisId;
+	}
+
 	private static int obtenerEquipoId() {
 		EquipoServicio equipoServicio = new EquipoServicio();
 		int equipoId = 0;
 		boolean exists = false;
+
+		boolean verLista = obtenerBoolean("¿Desea ver la lista de IDs de equipo? (s/n):");
+		if (verLista) {
+			List<Equipo> equipoList = equipoServicio.listarEquipos();
+			equipoList.forEach(equipo -> System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre()));
+		}
+
 		do {
 			System.out.println("Introduzca el ID del equipo: ");
 			try {
@@ -720,5 +846,24 @@ public class GestionEventos {
 			}
 		} while (!exists);
 		return equipoId;
+	}
+
+	private static boolean obtenerBoolean(String mensaje) {
+		boolean entradaValida = false;
+		boolean result = false;
+		do {
+			System.out.println(mensaje);
+			char input = sc.next().trim().toLowerCase().charAt(0);
+			if (input == 's') {
+				result = true;
+				entradaValida = true;
+			} else if (input == 'n') {
+				result = false;
+				entradaValida = true;
+			} else {
+				System.out.println("Entrada no válida. Por favor, introduzca 's' o 'n'.");
+			}
+		} while (!entradaValida);
+		return result;
 	}
 }
