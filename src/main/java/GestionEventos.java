@@ -16,7 +16,7 @@ public class GestionEventos {
 	static final Logger logger = LogManager.getLogger();
 
 	public static void main(String[] args) {
-		logger.info("Application started");
+		
 		System.out.println("Bienvenid@ al creador de eventos de MotorSport");
 		System.out.println("Elija la tabla a la que quiere acceder");
 		seleccionOpcion();
