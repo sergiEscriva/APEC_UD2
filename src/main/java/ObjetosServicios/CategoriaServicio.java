@@ -10,11 +10,21 @@ import java.util.List;
 public class CategoriaServicio {
 
     private CategoriaDAO categoriaDAO;
-
+    /**
+     * Constructor de la clase CategoriaServicio.
+     * Inicializa la instancia de CategoriaDAO.
+     */
     public CategoriaServicio() {
         this.categoriaDAO = new CategoriaImpl();
     }
-
+    /**
+     * Agrega una nueva categoría.
+     *
+     * @param id El ID de la categoría.
+     * @param nombre El nombre de la categoría.
+     * @param nombreCorto El nombre corto de la categoría.
+     * @param relevancia La relevancia de la categoría.
+     */
     public void agregarCategoria(int id, String nombre, String nombreCorto, int relevancia) {
         Categoria categoria = new Categoria();
         categoria.setId(id);
