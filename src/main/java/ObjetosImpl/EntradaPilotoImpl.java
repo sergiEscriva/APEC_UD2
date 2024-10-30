@@ -17,11 +17,15 @@ public class EntradaPilotoImpl implements EntradaPilotoDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM DRIVER_ENTRY";
 	private static final String ACTUALIZAR = "UPDATE DRIVER_ENTRY SET ROOKIE=?, ROOKIE=? WHERE ENTRY_ID=?, DRIVER_ID=?";
 	private static final String ELIMINAR = "DELETE FROM DRIVER_ENTRY WHERE ENTRY_ID=?, DRIVER_ID=?";
+	private static final String ENTRADA_EXISTENTE = "SELECT COUNT(*) AS count FROM DRIVER_ENTRY WHERE ENTRY_ID = ? AND DRIVER_ID = ?";
 	ConexionMs conexion = new ConexionMs();
 
 
 	@Override
 	public void insertar(EntradaPiloto entradaPiloto) throws DAOException {
+		if (existe(entradaPiloto.getEntrada_id(), entradaPiloto.getPiloto_id())) {
+			throw new DAOException("Error: La combinación de ENTRY_ID y DRIVER_ID ya existe.", null);
+		}
 		try (
 				PreparedStatement statement = conexion.getConnection().prepareStatement(INSERTAR)) {
 			statement.setInt(1, entradaPiloto.getEntrada_id());
@@ -102,4 +106,21 @@ public class EntradaPilotoImpl implements EntradaPilotoDAO {
 			throw new DAOException("Error deleting EntradaPiloto", e);
 		}
 	}
+
+	@Override
+	public boolean existe(int entryId, int driverId) throws DAOException {
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(ENTRADA_EXISTENTE)) {
+			statement.setInt(1, entryId);
+			statement.setInt(2, driverId);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					return resultSet.getInt("count") > 0;
+				}
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error checking if EntradaPiloto exists", e);
+		}
+		return false;
+	}
+
 }

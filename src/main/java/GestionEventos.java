@@ -2,6 +2,8 @@ import Excepciones.DAOException;
 import Objetos.*;
 import ObjetosSerivios.*;
 
+import javax.sound.midi.Soundbank;
+import java.lang.ref.PhantomReference;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.Scanner;
 public class GestionEventos {
 
 	static Scanner sc = new Scanner(System.in);
+	static List<Piloto> pilotoList;
 
 	public static void main(String[] args) {
 
@@ -124,8 +127,30 @@ public class GestionEventos {
 	}
 
 	private static void gestionarEntradaPiloto() {
-		// Implement CRUD operations for EntradaPiloto
-		System.out.println("Gestionando EntradaPiloto");
+		EntradaPilotoServicio entradaPiloto = new EntradaPilotoServicio();
+		List<EntradaPiloto> entradaPilotoList;
+		boolean finalizar = Boolean.FALSE;
+		do {
+			imprimirGestion();
+			switch (seleccionGestion()) {
+				case 1 -> entradaPiloto.agregarEntradaPiloto(obtenerID(), obtenerPilotoId(), obtenerRookie(), obtenerCategoria());
+				case 2 -> entradaPiloto.actualizarEntradaPiloto(obtenerID(), obtenerPilotoId(), obtenerRookie(), obtenerCategoria());
+				case 3 -> entradaPiloto.eliminarEntradaPiloto(obtenerID(), obtenerID());
+				case 4 -> {
+					EntradaPiloto entradaPilotoEncontrado = entradaPiloto.obtenerEntradaPiloto(obtenerID(), obtenerID());
+					if (entradaPilotoEncontrado != null) {
+						System.out.println(entradaPilotoEncontrado);
+					} else {
+						System.out.println("Entrada de piloto no encontrada");
+					}
+				}
+				case 5 -> {
+					entradaPilotoList = entradaPiloto.listarEntradasPiloto();
+					entradaPilotoList.forEach(System.out::println);
+				}
+				default -> finalizar = Boolean.TRUE;
+			}
+		} while (!finalizar);
 	}
 
 	private static void gestionarEquipo() {
@@ -168,10 +193,35 @@ public class GestionEventos {
 	}
 
 	private static void gestionarEvento() {
-		// Implement CRUD operations for Evento
-		System.out.println("Gestionando Evento");
+		EventoServicio evento = new EventoServicio();
+		int ultimoID = obtenerUltimoIdEvento(evento);
+		List<Evento> eventoList;
+		boolean finalizar = Boolean.FALSE;
+		do {
+			imprimirGestion();
+			switch (seleccionGestion()) {
+				case 1 -> evento.agregarEvento(obtenerID(ultimoID), obtenerNombre(),obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(),obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(),obtenerCategoriaId());
+				case 2 -> evento.actualizarEvento(obtenerID(),obtenerNombre(),obtenerChassisId(), obtenerMotorId(), obtenerDirigidoPorId(),obtenerRuedasId(), obtenerNumeroPiloto(), obtenerEquipoId(),obtenerCategoriaId());
+				case 3 -> evento.eliminarEvento(obtenerID());
+				case 4 -> {
+					Evento eventoEncontrado = evento.obtenerEvento(obtenerID());
+					if (eventoEncontrado != null) {
+						System.out.println(eventoEncontrado);
+					} else {
+						System.out.println("Evento no encontrado");
+					}
+				}
+				case 5 -> {
+					eventoList = evento.listarEventos();
+					eventoList.forEach(System.out::println);
+				}
+				default -> finalizar = Boolean.TRUE;
+			}
+		} while (!finalizar);
 	}
-
+	private static int obtenerUltimoIdEvento(EventoServicio eventoServicio) {
+		return eventoServicio.obtenerUltimoId();
+	}
 	private static void gestionarMotor() {
 		MotorServicio motor = new MotorServicio();
 		int ultimoId = obtenerUltimoIdMotor(motor);
@@ -224,7 +274,7 @@ public class GestionEventos {
 	private static void gestionarPiloto() {
 		PilotoServicio piloto = new PilotoServicio();
 		int ultimoId = obtenerUltimoIdPiloto(piloto);
-		List<Piloto> pilotoList;
+		
 		boolean finalizar = Boolean.FALSE;
 		switch (seleccionGestion()) {
 			case 1 ->
@@ -519,6 +569,156 @@ public class GestionEventos {
 		System.out.println("¿Tiene turbo? (true/false): ");
 		return sc.nextBoolean();
 	}
-
-
+	private static boolean obtenerRookie() {
+		System.out.println("¿Es rookie? (true/false): ");
+		return sc.nextBoolean();
+	}
+	private static void mostrarPilotos() {
+		pilotoList.forEach(System.out::println);
+	}
+	
+	private static int obtenerPilotoId() {
+		System.out.println("Desea ver la lista de pilotos? (true/false): ");
+		boolean verLista = sc.nextBoolean();
+		if (verLista) {
+			mostrarPilotos();
+		}
+		System.out.println("Introduzca el ID del piloto: ");
+		return sc.nextInt();
+	}
+	
+	private static int obtenerCategoria() {
+		System.out.println("Introduzca el ID de la categoría: ");
+		return sc.nextInt();
+	}
+	private static int obtenerChassisId() {
+		ChassisServicio chassisServicio = new ChassisServicio();
+		int chassisId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID del chassis: ");
+			try {
+				chassisId = sc.nextInt();
+				Chassis chassis = chassisServicio.obtenerChassis(chassisId);
+				if (chassis != null) {
+					exists = true;
+				} else {
+					System.out.println("Chassis ID no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return chassisId;
+	}
+	private static int obtenerMotorId() {
+		MotorServicio motorServicio = new MotorServicio();
+		int motorId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID del motor: ");
+			try {
+				motorId = sc.nextInt();
+				Motor motor = motorServicio.obtenerMotor(motorId);
+				if (motor != null) {
+					exists = true;
+				} else {
+					System.out.println("Motor ID no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return motorId;
+	}
+	private static int obtenerDirigidoPorId() {
+		EquipoServicio equipoServicio = new EquipoServicio();
+		int dirigidoPorId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID del equipo que dirige: ");
+			try {
+				dirigidoPorId = sc.nextInt();
+				Equipo equipo = equipoServicio.obtenerEquipo(dirigidoPorId);
+				if (equipo != null) {
+					exists = true;
+				} else {
+					System.out.println("ID del equipo no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return dirigidoPorId;
+	}
+	private static String obtenerNumeroPiloto() {
+		System.out.println("Introduzca el número del piloto en el evento: ");
+		return sc.nextLine();
+	}
+	private static int obtenerRuedasId() {
+		RuedasServicio ruedasServicio = new RuedasServicio();
+		int ruedasId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID del proveedor de ruedas: ");
+			try {
+				ruedasId = sc.nextInt();
+				Ruedas ruedas = ruedasServicio.obtenerRuedas(ruedasId);
+				if (ruedas != null) {
+					exists = true;
+				} else {
+					System.out.println("ID del proveedor de ruedas no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return ruedasId;
+	}
+	private static int obtenerCategoriaId() {
+		CategoriaServicio categoriaServicio = new CategoriaServicio();
+		int categoriaId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID de la categoría: ");
+			try {
+				categoriaId = sc.nextInt();
+				Categoria categoria = categoriaServicio.obtenerCategoria(categoriaId);
+				if (categoria != null) {
+					exists = true;
+				} else {
+					System.out.println("ID de la categoría no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return categoriaId;
+	}
+	private static int obtenerEquipoId() {
+		EquipoServicio equipoServicio = new EquipoServicio();
+		int equipoId = 0;
+		boolean exists = false;
+		do {
+			System.out.println("Introduzca el ID del equipo: ");
+			try {
+				equipoId = sc.nextInt();
+				Equipo equipo = equipoServicio.obtenerEquipo(equipoId);
+				if (equipo != null) {
+					exists = true;
+				} else {
+					System.out.println("ID del equipo no encontrado. Intente de nuevo.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Introduzca un número válido.");
+				sc.next();
+			}
+		} while (!exists);
+		return equipoId;
+	}
 }

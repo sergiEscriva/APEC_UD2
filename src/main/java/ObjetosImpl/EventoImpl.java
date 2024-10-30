@@ -17,6 +17,7 @@ public class EventoImpl implements EventoDAO {
 	private static final String OBTENER_TODOS = "SELECT * FROM EVENT_ENTRY";
 	private static final String ACTUALIZAR = "UPDATE EVENT_ENTRY SET TEAM_NAME=?, CHASSIS_ID=?, ENGINE_ID=?, OPERATED_BY_ID=?, EVENT_EDITION_ID=?, RACE_NUMBER=?, TEAM_ID=?, CATEGORY_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM EVENT_ENTRY WHERE ID =?";
+	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM EVENT_ENTTRY";
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
@@ -66,7 +67,7 @@ public class EventoImpl implements EventoDAO {
 	}
 
 	@Override
-	public List<Evento> obtenerTodas() throws DAOException {
+	public List<Evento> obtenerTodos() throws DAOException {
 		List<Evento> eventoList = new ArrayList<>();
 		try (
 				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_TODOS);
@@ -120,4 +121,19 @@ public class EventoImpl implements EventoDAO {
 			throw new DAOException("Error deleting Evento", e);
 		}
 	}
+
+	@Override
+	public int obtenerUltimoId() throws DAOException {
+		try (
+				PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_ULTIMO_ID);
+				ResultSet resultSet = statement.executeQuery()) {
+			if (resultSet.next()) {
+				return resultSet.getInt("MAX_ID");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting last Evento ID", e);
+		}
+		return 0;
+	}
+
 }
