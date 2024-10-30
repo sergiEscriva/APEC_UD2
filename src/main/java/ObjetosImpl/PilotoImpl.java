@@ -20,7 +20,11 @@ public class PilotoImpl implements PilotoDAO {
 	private static final String	ACTUALIZAR = "UPDATE DRIVER SET NAME=?, SURNAME=?, BIRTH_DATE=?, DEATH_DATE=?, NACIONALITY=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM DRIVER WHERE ID =?";
 	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM DRIVER";
-	
+	private static final String OBTENER_PILOTOS_CON_EVENTOS =
+			"SELECT d.ID, d.NAME, d.SURNAME, e.TEAM_NAME AS EVENTO_NOMBRE " +
+					"FROM DRIVER d " +
+					"JOIN DRIVERS_ENTRY de ON d.ID = de.DRIVER_ID " +
+					"JOIN EVENT_ENTRY e ON de.DRIVER_ID = e.ID";	
 	ConexionMs conexion = new ConexionMs();
 
 
@@ -122,6 +126,25 @@ public class PilotoImpl implements PilotoDAO {
 			throw new DAOException("Error obteniendo el último ID de Categoria", e);
 		}
 		return 0;
+	}
+
+	@Override
+	public List<Piloto> obtenerPilotosConEventos() throws DAOException {
+		List<Piloto> pilotos = new ArrayList<>();
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_PILOTOS_CON_EVENTOS);
+			 ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				Piloto piloto = new Piloto();
+				piloto.setId(resultSet.getInt("ID"));
+				piloto.setNombre(resultSet.getString("NAME"));
+				piloto.setApellido(resultSet.getString("SURNAME"));
+				piloto.setEventoNombre(resultSet.getString("EVENTO_NOMBRE"));
+				pilotos.add(piloto);
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting Pilotos with Eventos", e);
+		}
+		return pilotos;
 	}
 
 	public static Piloto crearPiloto(ResultSet rs) throws SQLException {

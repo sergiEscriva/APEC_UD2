@@ -10,11 +10,23 @@ import java.util.List;
 public class RuedasServicio {
 
     private RuedasDAO ruedasDAO;
-
+    /**
+     * Obtiene el último ID de los pilotos.
+     *
+     * @return El último ID de los pilotos.
+     * @throws DAOException Si ocurre un error al obtener el ID.
+     */
     public RuedasServicio() {
         this.ruedasDAO = new RuedasImpl();
     }
-
+    /**
+     * Agrega un nuevo proveedor de ruedas.
+     *
+     * @param id El ID del proveedor de ruedas.
+     * @param nombre El nombre del proveedor de ruedas.
+     * @param colorLetra El color de la letra del proveedor de ruedas.
+     * @param colorFondo El color de fondo del proveedor de ruedas.
+     */
     public void agregarRuedas(int id, String nombre, String colorLetra, String colorFondo) {
         Ruedas ruedas = new Ruedas();
         ruedas.setId(id);
@@ -28,7 +40,12 @@ public class RuedasServicio {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Obtiene un proveedor de ruedas por su ID.
+     *
+     * @param id El ID del proveedor de ruedas.
+     * @return El proveedor de ruedas obtenido o null si ocurre un error.
+     */
     public Ruedas obtenerRuedas(int id) {
         try {
             return ruedasDAO.obtenerPorId(id);
@@ -37,7 +54,11 @@ public class RuedasServicio {
             return null;
         }
     }
-
+    /**
+     * Lista todos los proveedores de ruedas.
+     *
+     * @return Una lista de todos los proveedores de ruedas o null si ocurre un error.
+     */
     public List<Ruedas> listarRuedas() {
         try {
             return ruedasDAO.obtenerTodas();
@@ -46,7 +67,14 @@ public class RuedasServicio {
             return null;
         }
     }
-
+    /**
+     * Actualiza un proveedor de ruedas existente.
+     *
+     * @param id El ID del proveedor de ruedas.
+     * @param nombre El nombre del proveedor de ruedas.
+     * @param colorLetra El color de la letra del proveedor de ruedas.
+     * @param colorFondo El color de fondo del proveedor de ruedas.
+     */
     public void actualizarRuedas(int id, String nombre, String colorLetra, String colorFondo) {
         Ruedas ruedas = new Ruedas(id, nombre, colorLetra, colorFondo);
         try {
@@ -56,7 +84,11 @@ public class RuedasServicio {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Elimina un proveedor de ruedas por su ID.
+     *
+     * @param id El ID del proveedor de ruedas.
+     */
     public void eliminarRuedas(int id) {
         try {
             ruedasDAO.eliminar(id);
@@ -65,6 +97,12 @@ public class RuedasServicio {
             e.printStackTrace();
         }
     }
+    /**
+     * Obtiene el último ID de los proveedores de ruedas.
+     *
+     * @return El último ID de los proveedores de ruedas.
+     * @throws DAOException Si ocurre un error al obtener el ID.
+     */
     public int obtenerUltimoId() {
         try {
             return ruedasDAO.obtenerUltimoID();

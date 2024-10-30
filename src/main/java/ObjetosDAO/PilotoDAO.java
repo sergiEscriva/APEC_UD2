@@ -12,4 +12,6 @@ public interface PilotoDAO {
 	void actualizar(Piloto piloto) throws DAOException;
 	void eliminar(int id ) throws DAOException;
 	int obtenerUltimoID() throws DAOException;
+	List<Piloto> obtenerPilotosConEventos() throws DAOException;
+
 }

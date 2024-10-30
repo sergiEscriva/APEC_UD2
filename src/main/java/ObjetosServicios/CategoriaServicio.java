@@ -38,7 +38,12 @@ public class CategoriaServicio {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Obtiene una categoría por su ID.
+     *
+     * @param id El ID de la categoría.
+     * @return La categoría obtenida o null si ocurre un error.
+     */
     public Categoria obtenerCategoria(int id) {
         try {
             return categoriaDAO.obtenerPorId(id);
@@ -48,6 +53,11 @@ public class CategoriaServicio {
         }
     }
 
+    /**
+     * Lista todas las categorías.
+     *
+     * @return Una lista de todas las categorías o null si ocurre un error.
+     */
     public List<Categoria> listarCategorias() {
         try {
             return categoriaDAO.obtenerTodas();
@@ -56,7 +66,14 @@ public class CategoriaServicio {
             return null;
         }
     }
-
+    /**
+     * Actualiza una categoría existente.
+     *
+     * @param id El ID de la categoría.
+     * @param nombre El nombre de la categoría.
+     * @param nombreCorto El nombre corto de la categoría.
+     * @param relevancia La relevancia de la categoría.
+     */
     public void actualizarCategoria(int id, String nombre, String nombreCorto, int relevancia) {
         Categoria categoria = new Categoria(id, nombre, nombreCorto, relevancia);
         try {
@@ -66,7 +83,11 @@ public class CategoriaServicio {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Elimina una categoría por su ID.
+     *
+     * @param id El ID de la categoría.
+     */
     public void eliminarCategoria(int id) {
         try {
             categoriaDAO.eliminar(id);
@@ -75,6 +96,12 @@ public class CategoriaServicio {
             e.printStackTrace();
         }
     }
+    /**
+     * Obtiene el último ID de las categorías.
+     *
+     * @return El último ID de las categorías.
+     * @throws DAOException Si ocurre un error al obtener el ID.
+     */
     public int obtenerUltimoID() throws DAOException {
         return categoriaDAO.obtenerUltimoID();
     }

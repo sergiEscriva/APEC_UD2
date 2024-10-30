@@ -1,6 +1,8 @@
 import Excepciones.DAOException;
 import Objetos.*;
 import ObjetosServicios.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.InputMismatchException;
@@ -11,13 +13,13 @@ public class GestionEventos {
 
 	static Scanner sc = new Scanner(System.in);
 	static List<Piloto> pilotoList;
+	static final Logger logger = LogManager.getLogger();
 
 	public static void main(String[] args) {
-
+		logger.info("Application started");
 		System.out.println("Bienvenid@ al creador de eventos de MotorSport");
 		System.out.println("Elija la tabla a la que quiere acceder");
 		seleccionOpcion();
-
 
 	}
 	/**
@@ -31,7 +33,9 @@ public class GestionEventos {
 				"5. Evento\n" +
 				"6. Motor\n" +
 				"7. Piloto\n" +
-				"8. Proveedor de Ruedas");
+				"8. Proveedor de Ruedas\n" +
+				"9. Eventos con Equipos\n" +
+				"0. Pilotos con Eventos\n");
 	}
 
 	/**
@@ -320,11 +324,25 @@ public class GestionEventos {
 			}
 		} while (!finalizar);
 	}
-	/**
-	 * Obtiene el último ID de la categoría.
-	 * @param categoriaServicio Servicio de categorías para obtener el último ID.
-	 * @return Último ID de la categoría.
-	 */
+	
+	private static void mostrarPilotosConEventos() {
+		PilotoServicio pilotoServicio = new PilotoServicio();
+		List<Piloto> pilotos = pilotoServicio.obtenerPilotosConEventos();
+		if (pilotos != null) {
+			pilotos.forEach(piloto -> System.out.println("Piloto ID: " + piloto.getId() + ", Nombre: " + piloto.getNombre() + ", Evento: " + piloto.getEventoNombre()));
+		} else {
+			System.out.println("No se pudieron obtener los pilotos con eventos.");
+		}
+	}
+	private static void mostrarEventosConEquipos() {
+		EventoServicio eventoServicio = new EventoServicio();
+		List<Evento> eventos = eventoServicio.obtenerEventosConEquipos();
+		if (eventos != null) {
+			eventos.forEach(evento -> System.out.println("Evento ID: " + evento.getId() + ", Nombre del Equipo: " + evento.getNombre_equipo()));
+		} else {
+			System.out.println("No se pudieron obtener los eventos con equipos.");
+		}
+	}
 	private static int obtenerUltimoIDCategoria(CategoriaServicio categoriaServicio) {
 		try {
 			return categoriaServicio.obtenerUltimoID();
@@ -363,38 +381,6 @@ public class GestionEventos {
 	 * Obtiene el ID de un evento válido.
 	 * @param eventoServicio Servicio de eventos para obtener la lista de eventos.
 	 * @return ID del evento válido.
-	 */
-	private static int obtenerEventoId(EventoServicio eventoServicio) {
-		int eventoId = 0;
-		boolean exists = false;
-
-		boolean verLista = obtenerBoolean("¿Desea ver la lista de eventos? (s/n):");
-		if (verLista) {
-			List<Evento> eventoList = eventoServicio.listarEventos();
-			eventoList.forEach(evento -> System.out.println("ID: " + evento.getId()));
-		}
-
-		do {
-			System.out.println("Introduzca el ID del evento: ");
-			try {
-				eventoId = sc.nextInt();
-				Evento evento = eventoServicio.obtenerEvento(eventoId);
-				if (evento != null) {
-					exists = true;
-				} else {
-					System.out.println("ID del evento no encontrado. Intente de nuevo.");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("Introduzca un número válido.");
-				sc.next();
-			}
-		} while (!exists);
-		return eventoId;
-	}
-	/**
-	 * Obtiene el último ID del evento.
-	 * @param eventoServicio Servicio de eventos para obtener el último ID.
-	 * @return Último ID del evento.
 	 */
 	private static int obtenerUltimoIdEvento(EventoServicio eventoServicio) {
 		return eventoServicio.obtenerUltimoId();
@@ -471,11 +457,16 @@ public class GestionEventos {
 	 * Selecciona una opción de tabla.
 	 */
 	private static void seleccionOpcion() {
-		char opcion;
+		char opcion = ' ';
 		do {
 			imprimirTalbas();
 			System.out.println("Seleccione una opción (1-8) o '!' para salir:");
-			opcion = sc.nextLine().charAt(0);
+			String input = sc.nextLine().trim();
+			if (input.isEmpty()) {
+				System.out.println("Entrada vacía. Por favor, introduzca una opción válida.");
+				continue;
+			}
+			opcion = input.charAt(0);
 			switch (opcion) {
 				case '1' -> gestionarCategoria();
 				case '2' -> gestionarChassis();
@@ -485,6 +476,8 @@ public class GestionEventos {
 				case '6' -> gestionarMotor();
 				case '7' -> gestionarPiloto();
 				case '8' -> gestionarProveedorRuedas();
+				case '9' -> mostrarEventosConEquipos();
+				case '0' -> mostrarPilotosConEventos();
 				case '!' -> System.out.println("Saliendo...");
 				default -> System.out.println("Opción no válida");
 			}

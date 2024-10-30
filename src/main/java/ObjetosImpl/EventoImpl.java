@@ -18,6 +18,8 @@ public class EventoImpl implements EventoDAO {
 	private static final String ACTUALIZAR = "UPDATE EVENT_ENTRY SET TEAM_NAME=?, CHASSIS_ID=?, ENGINE_ID=?, OPERATED_BY_ID=?, EVENT_EDITION_ID=?, RACE_NUMBER=?, TEAM_ID=?, CATEGORY_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM EVENT_ENTRY WHERE ID =?";
 	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM EVENT_ENTRY";
+	private static final String OBTENER_EVENTOS_CON_EQUIPOS = "SELECT e.ID, e.TEAM_NAME, eq.name AS EQUIPO_NOMBRE FROM EVENT_ENTRY e JOIN TEAM eq ON e.TEAM_ID = eq.ID";
+
 	ConexionMs conexion = new ConexionMs();
 
 	@Override
@@ -136,5 +138,22 @@ public class EventoImpl implements EventoDAO {
 		}
 		return 0;
 	}
+
+	@Override
+	public List<Evento> obtenerEventosConEquipos() throws DAOException {
+		List<Evento> eventos = new ArrayList<>();
+		try (PreparedStatement statement = conexion.getConnection().prepareStatement(OBTENER_EVENTOS_CON_EQUIPOS);
+			 ResultSet resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				Evento evento = new Evento();
+				evento.setId(resultSet.getInt("ID"));
+				evento.setNombre_equipo(resultSet.getString("TEAM_NAME"));
+				evento.setNombre_equipo(resultSet.getString("EQUIPO_NOMBRE"));
+				eventos.add(evento);
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Error getting Eventos with Equipos", e);
+		}
+		return eventos;	}
 
 }

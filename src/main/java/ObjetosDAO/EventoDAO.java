@@ -12,4 +12,5 @@ public interface EventoDAO {
 	void actualizar(Evento evento) throws DAOException;
 	void eliminar(int id ) throws DAOException;
 	int obtenerUltimoId() throws DAOException;
+	List<Evento> obtenerEventosConEquipos() throws DAOException;
 }
