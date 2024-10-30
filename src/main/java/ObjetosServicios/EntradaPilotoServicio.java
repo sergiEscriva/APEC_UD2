@@ -1,4 +1,4 @@
-package ObjetosSerivios;
+package ObjetosServicios;
 
 import Excepciones.DAOException;
 import Objetos.EntradaPiloto;

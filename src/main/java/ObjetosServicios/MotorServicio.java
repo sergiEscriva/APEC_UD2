@@ -1,4 +1,4 @@
-package ObjetosSerivios;
+package ObjetosServicios;
 
 import ObjetosDAO.MotorDAO;
 import ObjetosImpl.MotorImpl;
