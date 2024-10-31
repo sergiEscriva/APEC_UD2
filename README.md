@@ -15,7 +15,7 @@ Este proyecto es una base de datos para deportes de motor, en la cual se pueden 
 ### Instrucciones para la importacion de la bd
 La bd esta creada con Postgres v 16.4 asi que se debera de instalar esa version para asegurarse de que la bd se importa bien.
 En postgres se debe crear un usuario llamado 'msdb_user' para la importacion de la bd.
-Se adjuntara un archivo .backup con la bd para que se pueda importar a postgres yo la he importado directamente desde el software.
+Se adjuntara un archivo msdb.backup con la bd para que se pueda importar a postgres yo la he importado directamente desde el software.
 
 ***
 
