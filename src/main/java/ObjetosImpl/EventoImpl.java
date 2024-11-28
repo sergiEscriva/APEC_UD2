@@ -18,7 +18,8 @@ public class EventoImpl implements EventoDAO {
 	private static final String ACTUALIZAR = "UPDATE EVENT_ENTRY SET TEAM_NAME=?, CHASSIS_ID=?, ENGINE_ID=?, OPERATED_BY_ID=?, EVENT_EDITION_ID=?, RACE_NUMBER=?, TEAM_ID=?, CATEGORY_ID=? WHERE ID=?";
 	private static final String ELIMINAR = "DELETE FROM EVENT_ENTRY WHERE ID =?";
 	private static final String OBTENER_ULTIMO_ID = "SELECT MAX(ID) AS MAX_ID FROM EVENT_ENTRY";
-	private static final String OBTENER_EVENTOS_CON_EQUIPOS = "SELECT e.ID, e.TEAM_NAME, eq.name AS EQUIPO_NOMBRE FROM EVENT_ENTRY e JOIN TEAM eq ON e.TEAM_ID = eq.ID";
+	private static final String OBTENER_EVENTOS_CON_EQUIPOS = "SELECT e.ID, e.TEAM_NAME, eq.name AS EQUIPO_NOMBRE " +
+																"FROM EVENT_ENTRY e JOIN TEAM eq ON e.TEAM_ID = eq.ID";
 
 	ConexionMs conexion = new ConexionMs();
 

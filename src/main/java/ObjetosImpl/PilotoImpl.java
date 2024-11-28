@@ -24,7 +24,7 @@ public class PilotoImpl implements PilotoDAO {
 			"SELECT d.ID, d.NAME, d.SURNAME, e.TEAM_NAME AS EVENTO_NOMBRE " +
 					"FROM DRIVER d " +
 					"JOIN DRIVERS_ENTRY de ON d.ID = de.DRIVER_ID " +
-					"JOIN EVENT_ENTRY e ON de.DRIVER_ID = e.ID";	
+					"JOIN EVENT_ENTRY e ON de.DRIVER_ID = e.ID";
 	ConexionMs conexion = new ConexionMs();
 
 
